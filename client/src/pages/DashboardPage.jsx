@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { stats, categories, recentDocs } from '../data/mockData'
+import { stats, categories, myDocs } from '../data/mockData'
 import DocCard from '../components/docs/DocCard'
 
 export default function DashboardPage() {
   const [activeCategory, setActiveCategory] = useState("All")
 
   const filteredDocs = activeCategory === "All"
-    ? recentDocs
-    : recentDocs.filter(doc => doc.tags.includes(activeCategory))
+    ? myDocs
+    : myDocs.filter(doc => doc.tags.includes(activeCategory))
 
   return (
     <div className="max-w-3xl">
@@ -16,7 +16,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-3 gap-3 mb-6">
         {stats.map(stat => (
           <div key={stat.label} className="bg-gray-100 rounded-lg p-3">
-            <p className="text-[11px] text-gray-400 mb-1">{stat.label}</p>
+            <p className="text-[11px] text-gray-900 mb-1">{stat.label}</p>
             <p className="text-[20px] font-medium text-gray-900">{stat.value}</p>
           </div>
         ))}

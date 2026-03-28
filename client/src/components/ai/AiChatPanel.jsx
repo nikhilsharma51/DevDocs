@@ -31,8 +31,8 @@ export default function AiChatPanel() {
             key={msg.id}
             className={`text-[11px] leading-relaxed p-2 rounded-lg max-w-[95%] ${
               msg.from === 'user'
-                ? 'bg-gray-100 text-gray-600 self-end'
-                : 'bg-purple-50 text-purple-900 self-start'
+                ? 'bg-gray-100 text-black self-end'
+                : 'bg-purple-100 text-black self-start'
             }`}
           >
             {msg.text}
@@ -47,7 +47,7 @@ export default function AiChatPanel() {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
           placeholder="Ask a question..."
-          className="flex-1 h-7 text-[11px] bg-gray-50 border border-gray-200 rounded-lg px-2 outline-none focus:border-purple-300"
+          className="flex-1 h-7 text-[11px] text-gray-600 bg-gray-50 border border-gray-200 rounded-lg px-2 outline-none focus:border-gray-600"
         />
         <button
           onClick={handleSend}
