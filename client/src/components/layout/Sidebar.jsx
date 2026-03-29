@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { currentUser } from '../../data/mockData'
 
 const navItems = [
-  { label: "Home",         path: "/dashboard" },
+  { label: "Home",         path: "/" },
   { label: "My docs",      path: "/docs/my" },
   { label: "Team docs",    path: "/docs/team" },
   { label: "Search",       path: "/search" },
