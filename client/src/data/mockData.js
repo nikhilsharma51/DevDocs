@@ -1,3 +1,5 @@
+
+
 export const currentUser = {
   name: "Rohan S.",
   initials: "RS",
@@ -260,6 +262,7 @@ All unhandled errors are caught by \`/middleware/errorHandler.js\` which logs th
 `
   },
 ]
+export const allDocs = [...myDocs]
 
 export const aiMessages = [
   { id: 1, from: "user", text: "How do I run the backend locally?" },
