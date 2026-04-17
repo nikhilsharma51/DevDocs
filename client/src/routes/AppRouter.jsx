@@ -7,6 +7,8 @@ import DocEditorPage from "../pages/DocEditorPage";
 import SearchPage from "../pages/SearchPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import TeamDocsPage from "../pages/TeamDocsPage";
+import AiAssistantPage from "../pages/AiAssistantPage"
 
 const router = createBrowserRouter([
   
@@ -17,12 +19,14 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       // { path: "/", element: <DashboardPage /> },
-        { path: '/',element: <DashboardPage /> },
+      { path: '/',element: <DashboardPage /> },
       { path: "/docs/my", element: <MyDocsPage /> },
       { path: '/docs/new',      element: <DocEditorPage /> },
       { path: "/docs/:id", element: <DocViewPage /> },
       { path: '/docs/:id/edit', element: <DocEditorPage /> },
       { path: '/search',        element: <SearchPage /> },
+      { path : '/docs/team' , element:<TeamDocsPage/>},
+      { path : '/ai' , element: <AiAssistantPage/>}
 
     ],
   },

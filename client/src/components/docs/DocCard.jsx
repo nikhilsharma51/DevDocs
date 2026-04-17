@@ -2,8 +2,24 @@
 import { useNavigate } from 'react-router-dom'
 import TagBadge from '../ui/TagBadge'
 
-export default function DocCard({ doc }) {
-  const navigate = useNavigate()
+function formatDate(dateStr) {
+  if (!dateStr) return ''
+  const date = new Date(dateStr)
+  const now  = new Date()
+  const diff = now - date
+  const mins  = Math.floor(diff / 60000)
+  const hours = Math.floor(diff / 3600000)
+  const days  = Math.floor(diff / 86400000)
+
+  if (mins < 60)  return `${mins}m ago`
+  if (hours < 24) return `${hours}h ago`
+  if (days < 7)   return `${days}d ago`
+  return date.toLocaleDateString()
+}
+
+export default function DocCard({ doc, isRecent }) {
+  const navigate   = useNavigate()
+  const authorName = doc.profiles?.name || doc.author_name || 'You'
 
   return (
     <div
@@ -11,17 +27,17 @@ export default function DocCard({ doc }) {
       className={`
         bg-white border border-gray-200 rounded-xl p-4 cursor-pointer
         hover:border-gray-400 hover:shadow-sm transition-all
-        ${doc.isRecent ? 'border-l-2 border-l-purple-400 rounded-l-none' : ''}
+        ${isRecent ? 'border-l-2 border-l-purple-400 rounded-l-none' : ''}
       `}
     >
-      <p className="text-[13px] font-medium text-gray-900 mb-1">
+      <p className="text-[13px] font-medium text-gray-900 mb-1 line-clamp-2">
         {doc.title}
       </p>
       <p className="text-[11px] text-gray-400">
-        Updated {doc.updatedAt} · {doc.author}
+        {formatDate(doc.updated_at)} · {authorName}
       </p>
       <div className="flex gap-1 mt-2 flex-wrap">
-        {doc.tags.map(tag => (
+        {(doc.tags || []).map(tag => (
           <TagBadge key={tag} tag={tag} />
         ))}
       </div>

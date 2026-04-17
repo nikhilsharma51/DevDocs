@@ -16,7 +16,6 @@ function buildFallbackProfile(authUser) {
   }
 }
 
-// Step 2 — create the Provider component
 // This wraps the whole app and broadcasts auth state to everyone
 export function AuthProvider({ children }) {
   const [user, setUser]       = useState(null)
