@@ -1,11 +1,13 @@
 import { createClient } from "@supabase/supabase-js/dist/index.cjs";
+import { configDotenv } from "dotenv";
+configDotenv()
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY,
 );
 
-export async function authMiddlware(req, res, next) {
+export async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith("bearer")) {
     return res.status(401).json({ error: "No token provided" });

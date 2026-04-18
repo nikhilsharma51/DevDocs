@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import { configDotenv } from "dotenv"
-import authMiddleware from "./middlewares/authMiddleware.js"
+import {authMiddleware} from "./middlewares/authMiddleware.js"
 import aiRouter from "./routes/aiRouter.js"
 
 configDotenv()
@@ -13,7 +13,7 @@ app.use(cors({origin : process.env.FRONTEND_URL}))
 app.use(express.json)
 
 app.use("/health",(_,res)=> res.json({ok : true}))
-app.use("/ai", authMiddleware,)
+app.use("/ai", authMiddleware,aiRouter)
 
 
 app.listen(PORT , ()=> console.log(`Server is running on ${PORT}`))
