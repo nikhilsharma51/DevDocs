@@ -1,6 +1,6 @@
 // src/components/ai/AiChatPanel.jsx
 import { useState } from 'react'
-import { useAiQuery } from '../../hooks/useAiQuery'
+import { useAiQuery } from '../../hooks/useAi'
 
 export default function AiChatPanel() {
   const { askQuestion, loading } = useAiQuery()
