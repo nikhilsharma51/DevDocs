@@ -16,7 +16,7 @@ embeddings_model = GoogleGenerativeAIEmbeddings(
 )
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-2.5-flash",
     google_api_key=os.getenv("GEMINI_API_KEY"),
     temperature=0.2,
 )
@@ -29,7 +29,7 @@ def get_embeddings(text: str):
 
 def embed_document(doc_id, title, content, user_id):
     text = f"{title}\n\n{content}"
-    embedding = embeddings_model(text)
+    embedding = get_embeddings(text)
 
     result = (
         supabase.table("documents")

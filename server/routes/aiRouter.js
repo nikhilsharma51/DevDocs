@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export const aiRouter = Router();
 
-PYTHON_AI_URI = process.env.PYTHON_AI_URI || 'http://localhost:8000'
+const PYTHON_AI_URI = process.env.PYTHON_AI_URI || 'http://localhost:8000'
 
 
 aiRouter.post("/query" , async(req,res)=>{
@@ -17,13 +17,13 @@ aiRouter.post("/query" , async(req,res)=>{
   try{
     const {data} = await axios.post(`${PYTHON_AI_URI}/query`,{
       question,
-      user_id = req.user.id
+      user_id : req.user.id
     })
     res.json(data)
   }catch(error){
-    console.error('Python call failed! : ',error.response?.data || err.message)
+    console.error('Python call failed! : ',error.response?.data || error.message)
     res.status(500).json({
-      error : err.response?.data?.detail || "Ai service unavailable"
+      error : error.response?.data?.detail || "Ai service unavailable"
     })
   }
 })
@@ -35,10 +35,10 @@ aiRouter.post("/embed", async (req, res) => {
 
   try{
     await axios.post(`${PYTHON_AI_URI}/embed`,{
-      doc_id = docId,
+      doc_id : docId,
       title,
-      content
-      user_id = req.user.id
+      content,
+      user_id : req.user.id
     })
 
     res.json({ok :true})

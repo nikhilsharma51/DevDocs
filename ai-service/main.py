@@ -2,6 +2,7 @@ from fastapi import FastAPI , HTTPException , Header
 from pydantic import BaseModel
 from typing import Optional
 from rag import run_rag_query , embed_document
+from supabase import create_client
 import os
 
 app = FastAPI()
