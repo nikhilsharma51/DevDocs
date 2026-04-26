@@ -1,4 +1,3 @@
-// src/components/ui/PendingInviteBanner.jsx
 import { useState } from 'react'
 import { useTeam } from '../../hooks/useTeam'
 import toast from 'react-hot-toast'

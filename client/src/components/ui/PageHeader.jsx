@@ -1,4 +1,4 @@
-// src/components/ui/PageHeader.jsx
+
 
 export default function PageHeader({ title, subtitle, actionLabel, onAction }) {
   return (

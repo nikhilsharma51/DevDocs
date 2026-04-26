@@ -1,8 +1,6 @@
-// src/components/ui/Modal.jsx
 import { useEffect } from 'react'
 
 export default function Modal({ isOpen, title, message, confirmLabel, cancelLabel, onConfirm, onCancel, danger }) {
-  // close on Escape key
   useEffect(() => {
     function handleKey(e) {
       if (e.key === 'Escape') onCancel()

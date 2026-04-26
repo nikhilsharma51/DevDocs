@@ -1,4 +1,4 @@
-// src/pages/TeamDocsPage.jsx
+
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'

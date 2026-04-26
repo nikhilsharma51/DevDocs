@@ -1,4 +1,4 @@
-// src/pages/DocViewPage.jsx
+
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDocs } from '../hooks/useDocs'

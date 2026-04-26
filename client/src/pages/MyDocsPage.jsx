@@ -1,4 +1,4 @@
-// src/pages/MyDocsPage.jsx
+
 import { useState, useMemo } from 'react'
 import { categories } from '../data/mockData'
 import { useDocs } from '../hooks/useDocs'

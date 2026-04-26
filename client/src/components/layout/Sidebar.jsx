@@ -1,4 +1,3 @@
-// src/components/layout/Sidebar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -25,7 +24,7 @@ export default function Sidebar() {
     (user?.email ? user.email.split("@")[0] : "") ||
     (loading ? "Loading..." : "User");
 
-  // get initials from the best available display name
+ 
   const initials =
     displayName
       .split(" ")
@@ -120,7 +119,6 @@ export default function Sidebar() {
           </div>
         </div>
 
-        {/* Sign out */}
         <button
           onClick={handleSignOut}
           className="w-full px-4 py-2.5 text-left text-[12px] text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors border-t border-gray-100"

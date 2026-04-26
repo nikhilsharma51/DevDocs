@@ -1,4 +1,3 @@
-// src/hooks/useDocs.js
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from './useAuth'
@@ -9,7 +8,6 @@ export function useDocs({ teamOnly = false } = {}) {
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState(null)
 
-  // ← extract primitives to avoid infinite loop
   const userId = user?.id ?? null
   const teamId = profile?.team_id ?? null
 

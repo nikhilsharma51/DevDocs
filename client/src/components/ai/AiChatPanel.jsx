@@ -17,7 +17,7 @@ export default function AiChatPanel() {
     // add user message immediately
     setMessages(prev => [...prev, { id: Date.now(), from: 'user', text: question }])
 
-    // get AI response
+
     const result = await askQuestion(question)
     const aiText = result
       ? result.answer

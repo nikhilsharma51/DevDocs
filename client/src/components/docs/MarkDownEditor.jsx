@@ -1,4 +1,3 @@
-// src/components/docs/MarkdownEditor.jsx
 import { useState } from 'react'
 import MarkdownPreview from './MarkdownPreview'
 

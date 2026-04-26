@@ -1,4 +1,3 @@
-// src/components/docs/DocCard.jsx
 import { useNavigate } from 'react-router-dom'
 import TagBadge from '../ui/TagBadge'
 import { useAuth } from '../../hooks/useAuth'

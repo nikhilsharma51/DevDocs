@@ -1,4 +1,3 @@
-// src/components/layout/Topbar.jsx
 import { useNavigate } from 'react-router-dom'
 import ThemeToggleButton from '../ui/ThemeToggleButton'
 

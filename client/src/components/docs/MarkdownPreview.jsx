@@ -1,4 +1,3 @@
-// src/components/docs/MarkdownPreview.jsx
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 

@@ -1,4 +1,3 @@
-
 import DocCard from './DocCard'
 
 export default function DocList({ docs, emptyMessage }) {

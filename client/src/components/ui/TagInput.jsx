@@ -1,4 +1,3 @@
-// src/components/ui/TagInput.jsx
 import { useState } from 'react'
 
 export default function TagInput({ tags, onChange }) {

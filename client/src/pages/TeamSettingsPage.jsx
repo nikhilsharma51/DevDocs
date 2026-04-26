@@ -1,4 +1,4 @@
-// src/pages/TeamSettingsPage.jsx
+
 import { useState } from 'react'
 import { useTeam } from '../hooks/useTeam'
 import { useAuth } from '../hooks/useAuth'
@@ -18,7 +18,7 @@ export default function TeamSettingsPage() {
   const [creating, setCreating]     = useState(false)
   const [inviting, setInviting]     = useState(false)
   const [showLeave, setShowLeave]   = useState(false)
-  const [showRemove, setShowRemove] = useState(null) // member id
+  const [showRemove, setShowRemove] = useState(null) 
 
   const isAdmin = profile?.role === 'admin'
 

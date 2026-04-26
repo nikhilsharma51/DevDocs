@@ -1,4 +1,3 @@
-// src/hooks/useAiQuery.js
 import { useState } from 'react'
 import axios from 'axios'
 import { useAuth } from './useAuth'
