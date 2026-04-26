@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../hooks/useAuth'
+import ThemeToggleButton from '../components/ui/ThemeToggleButton'
 
 export default function LoginPage() {
   const { signIn } = useAuth()
@@ -34,7 +35,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 relative">
+      {/* Keep theme switch available on unauthenticated screens. */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggleButton compact />
+      </div>
+
       <div className="w-full max-w-sm">
 
         {/* Logo */}
@@ -70,7 +76,7 @@ export default function LoginPage() {
                     message: 'Enter a valid email'
                   }
                 })}
-                className="w-full h-[38px] bg-gray-50 border border-gray-200 rounded-lg px-3 text-[13px] text-gray-800 placeholder-gray-400 outline-none focus:border-purple-300 transition-colors"
+                className="w-full h-9.5 bg-gray-50 border border-gray-200 rounded-lg px-3 text-[13px] text-gray-800 placeholder-gray-400 outline-none focus:border-purple-300 transition-colors"
               />
               {errors.email && (
                 <p className="text-[11px] text-red-500 mt-1">{errors.email.message}</p>
@@ -89,7 +95,7 @@ export default function LoginPage() {
                   required: 'Password is required',
                   minLength: { value: 6, message: 'Password must be at least 6 characters' }
                 })}
-                className="w-full h-[38px] bg-gray-50 border border-gray-200 rounded-lg px-3 text-[13px] text-gray-800 placeholder-gray-400 outline-none focus:border-purple-300 transition-colors"
+                className="w-full h-9.5 bg-gray-50 border border-gray-200 rounded-lg px-3 text-[13px] text-gray-800 placeholder-gray-400 outline-none focus:border-purple-300 transition-colors"
               />
               {errors.password && (
                 <p className="text-[11px] text-red-500 mt-1">{errors.password.message}</p>
@@ -100,7 +106,7 @@ export default function LoginPage() {
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={isLoading}
-              className="w-full h-[38px] bg-gray-900 text-white text-[13px] font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+              className="w-full h-9.5 bg-gray-900 text-white text-[13px] font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-1"
             >
               {isLoading ? 'Signing in...' : 'Sign in'}
             </button>

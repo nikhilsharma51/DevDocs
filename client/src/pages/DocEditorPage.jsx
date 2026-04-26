@@ -2,26 +2,29 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { useDocs } from "../hooks/useDocs";
 import { useAuth } from "../hooks/useAuth";
 import MarkdownEditor from "../components/docs/MarkdownEditor";
 import TagInput from "../components/ui/TagInput";
 import Modal from "../components/ui/Modal";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function DocEditorPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const isEditing = Boolean(id);
-  const { session } = useAuth();
+  const { id }      = useParams();
+  const navigate    = useNavigate();
+  const isEditing   = Boolean(id);
+  const { profile, session } = useAuth();
   const { createDoc, updateDoc, getDocById } = useDocs();
 
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [loadingDoc, setLoadingDoc] = useState(isEditing);
+  const [content, setContent]         = useState("");
+  const [tags, setTags]               = useState([]);
+  const [shareWithTeam, setShareWithTeam] = useState(false); // ← always start false
+  const [showModal, setShowModal]     = useState(false);
+  const [saving, setSaving]           = useState(false);
+  const [loadingDoc, setLoadingDoc]   = useState(isEditing);
+
+  const hasTeam = Boolean(profile?.team_id);
 
   const {
     register,
@@ -35,17 +38,28 @@ export default function DocEditorPage() {
   // load existing doc when editing
   useEffect(() => {
     if (!isEditing) return;
+
     async function load() {
+      setLoadingDoc(true);
       const { data, error } = await getDocById(id);
+
       if (error || !data) {
+        toast.error("Document not found");
         navigate("/docs/my");
         return;
       }
+
+      // populate form with existing values
       reset({ title: data.title });
       setContent(data.content || "");
       setTags(data.tags || []);
+
+      // ← set shareWithTeam AFTER doc loads, not before
+      setShareWithTeam(Boolean(data.team_id));
+
       setLoadingDoc(false);
     }
+
     load();
   }, [id, isEditing]);
 
@@ -53,62 +67,64 @@ export default function DocEditorPage() {
 
   async function onSubmit(formData) {
     setSaving(true);
+
     const docPayload = {
-      title: formData.title,
+      title:   formData.title,
       content,
       tags,
+      team_id: shareWithTeam && profile?.team_id
+        ? profile.team_id
+        : null,
     };
 
-    let docIdForEmbed = id;
+    if (isEditing) {
+      const { error } = await updateDoc(id, docPayload);
+      if (error) {
+        toast.error("Failed to save changes");
+        setSaving(false);
+        return;
+      }
+      toast.success("Document saved");
 
+      // embed the updated doc
+      await embedDoc(id, formData.title, content);
+      navigate(`/docs/${id}`);
+    } else {
+      const { data, error } = await createDoc(docPayload);
+      if (error) {
+        toast.error("Failed to create document");
+        setSaving(false);
+        return;
+      }
+      toast.success("Document created");
+
+      // embed the new doc
+      await embedDoc(data.id, formData.title, content);
+      navigate(`/docs/${data.id}`);
+    }
+  }
+
+  // non-blocking embed call to backend
+  async function embedDoc(docId, title, content) {
+    if (!import.meta.env.VITE_API_URL || !session?.access_token) return;
     try {
-      if (isEditing) {
-        const { error } = await updateDoc(id, docPayload);
-        if (error) {
-          toast.error("Failed to save");
-          return;
-        }
-        toast.success("Document saved");
-        navigate(`/docs/${id}`);
-        docIdForEmbed = id;
-      } else {
-        const { data, error } = await createDoc(docPayload);
-        if (error) {
-          toast.error("Failed to create document");
-          return;
-        }
-        toast.success("Document created");
-        docIdForEmbed = data.id;
-        navigate(`/docs/${data.id}`);
-      }
-
-      if (session?.access_token) {
-        try {
-          await axios.post(
-            `${import.meta.env.VITE_API_URL}/ai/embed`,
-            {
-              docId: docIdForEmbed,
-              title: formData.title,
-              content,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${session.access_token}`,
-              },
-            },
-          );
-        } catch (e) {
-          console.warn("Embedding failed silently:", e);
-        }
-      }
-    } finally {
-      setSaving(false);
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/ai/embed`,
+        { docId, title, content },
+        { headers: { Authorization: `Bearer ${session.access_token}` } }
+      );
+    } catch (e) {
+      // non-blocking — doc saves even if embedding fails
+      console.warn("Embedding failed silently:", e.message);
     }
   }
 
   function handleBack() {
-    if (hasUnsavedChanges) setShowModal(true);
-    else navigate(-1);
+    if (hasUnsavedChanges) {
+      setShowModal(true);
+    } else {
+      navigate(-1);
+    }
   }
 
   if (loadingDoc) {
@@ -123,24 +139,16 @@ export default function DocEditorPage() {
 
   return (
     <div className="max-w-3xl">
+
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <button
           type="button"
           onClick={handleBack}
           className="flex items-center gap-1.5 text-[12px] text-gray-400 hover:text-gray-700 transition-colors"
         >
-          <svg
-            className="w-3.5 h-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
           {isEditing ? "Back to doc" : "Back"}
         </button>
@@ -160,8 +168,8 @@ export default function DocEditorPage() {
             {saving
               ? "Saving..."
               : isEditing
-                ? "Save changes"
-                : "Create document"}
+              ? "Save changes"
+              : "Create document"}
           </button>
         </div>
       </div>
@@ -192,11 +200,41 @@ export default function DocEditorPage() {
         <TagInput tags={tags} onChange={setTags} />
       </div>
 
-      {/* Editor */}
+      {/* Team sharing toggle — only if user is in a team */}
+      {hasTeam && (
+        <div className="mb-5 flex items-center justify-between px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg">
+          <div>
+            <p className="text-[12px] font-medium text-gray-700">
+              Share with team
+            </p>
+            <p className="text-[11px] text-gray-400 mt-0.5">
+              {shareWithTeam
+                ? "All team members can read this document"
+                : "Only you can see this document"}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShareWithTeam((prev) => !prev)}
+            className={`relative w-10 h-5 rounded-full transition-colors flex-shrink-0 ${
+              shareWithTeam ? "bg-purple-500" : "bg-gray-300"
+            }`}
+          >
+            <div
+              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+                shareWithTeam ? "translate-x-5" : "translate-x-0.5"
+              }`}
+            />
+          </button>
+        </div>
+      )}
+
+      {/* Markdown editor */}
       <div className="border border-gray-200 rounded-lg overflow-hidden">
         <MarkdownEditor value={content} onChange={setContent} />
       </div>
 
+      {/* Discard modal */}
       <Modal
         isOpen={showModal}
         title="Discard changes?"

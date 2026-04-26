@@ -9,6 +9,8 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import TeamDocsPage from "../pages/TeamDocsPage";
 import AiAssistantPage from "../pages/AiAssistantPage"
+import TeamSettingsPage from "../pages/TeamSettingsPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const router = createBrowserRouter([
   
@@ -26,7 +28,10 @@ const router = createBrowserRouter([
       { path: '/docs/:id/edit', element: <DocEditorPage /> },
       { path: '/search',        element: <SearchPage /> },
       { path : '/docs/team' , element:<TeamDocsPage/>},
-      { path : '/ai' , element: <AiAssistantPage/>}
+      { path : '/ai' , element: <AiAssistantPage/>},
+      { path : '/profile', element: <ProfilePage /> },
+      { path : 'team/settings' , element: <TeamSettingsPage/> },
+      // { path : '/teams/settings' , element: <TeamSettingsPage/> }
 
     ],
   },

@@ -1,9 +1,308 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+/* Theme tokens: keep palette centralized for maintainability. */
+:root {
+  --ui-bg-canvas: #f3f4f6;
+  --ui-bg-surface: #ffffff;
+  --ui-bg-subtle: #f8fafc;
+  --ui-bg-muted: #f1f5f9;
+  --ui-bg-muted-strong: #e2e8f0;
+  --ui-bg-muted-stronger: #cbd5e1;
+
+  --ui-border-subtle: #e2e8f0;
+  --ui-border-strong: #cbd5e1;
+  --ui-border-stronger: #94a3b8;
+
+  --ui-text-primary: #0f172a;
+  --ui-text-secondary: #334155;
+  --ui-text-muted: #64748b;
+  --ui-text-faint: #94a3b8;
+
+  --ui-accent: #7c3aed;
+  --ui-accent-hover: #6d28d9;
+  --ui-accent-soft-bg: #f3e8ff;
+  --ui-accent-soft-bg-strong: #e9d5ff;
+  --ui-accent-border: #c4b5fd;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --ui-bg-canvas: #0f131a;
+  --ui-bg-surface: #151b24;
+  --ui-bg-subtle: #1b2430;
+  --ui-bg-muted: #243041;
+  --ui-bg-muted-strong: #2d3a4d;
+  --ui-bg-muted-stronger: #3a4960;
+
+  --ui-border-subtle: #334155;
+  --ui-border-strong: #475569;
+  --ui-border-stronger: #64748b;
+
+  --ui-text-primary: #e2e8f0;
+  --ui-text-secondary: #cbd5e1;
+  --ui-text-muted: #94a3b8;
+  --ui-text-faint: #64748b;
+
+  --ui-accent: #8b5cf6;
+  --ui-accent-hover: #7c3aed;
+  --ui-accent-soft-bg: rgba(139, 92, 246, 0.16);
+  --ui-accent-soft-bg-strong: rgba(139, 92, 246, 0.25);
+  --ui-accent-border: rgba(167, 139, 250, 0.5);
+
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
 
 body {
-  background-color: #1a1a1a;
-  color: #f0f0f0;
+  background-color: var(--ui-bg-canvas);
+  color: var(--ui-text-primary);
+}
+
+/* Compatibility bridge for legacy utility aliases still used by some components. */
+.bg-dark-surface {
+  background-color: var(--ui-bg-subtle);
+}
+
+.border-dark-border {
+  border-color: var(--ui-border-subtle);
+}
+
+.hover\:bg-dark-hover:hover {
+  background-color: var(--ui-bg-muted);
+}
+
+.focus\:border-brand-purple:focus {
+  border-color: var(--ui-accent);
+}
+
+/* Dark theme utility overrides: keep existing markup and spacing untouched. */
+:root[data-theme='dark'] .bg-white {
+  background-color: var(--ui-bg-surface) !important;
+}
+
+:root[data-theme='dark'] .bg-gray-50 {
+  background-color: var(--ui-bg-subtle) !important;
+}
+
+:root[data-theme='dark'] .bg-gray-100 {
+  background-color: var(--ui-bg-muted) !important;
+}
+
+:root[data-theme='dark'] .bg-gray-200 {
+  background-color: var(--ui-bg-muted-strong) !important;
+}
+
+:root[data-theme='dark'] .bg-gray-300 {
+  background-color: var(--ui-bg-muted-stronger) !important;
+}
+
+:root[data-theme='dark'] .bg-gray-900 {
+  background-color: #334155 !important;
+}
+
+:root[data-theme='dark'] .bg-purple-50 {
+  background-color: var(--ui-accent-soft-bg) !important;
+}
+
+:root[data-theme='dark'] .bg-purple-100 {
+  background-color: var(--ui-accent-soft-bg-strong) !important;
+}
+
+:root[data-theme='dark'] .bg-purple-300 {
+  background-color: rgba(196, 181, 253, 0.55) !important;
+}
+
+:root[data-theme='dark'] .bg-purple-500 {
+  background-color: var(--ui-accent) !important;
+}
+
+:root[data-theme='dark'] .bg-purple-600 {
+  background-color: var(--ui-accent-hover) !important;
+}
+
+:root[data-theme='dark'] .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.16) !important;
+}
+
+:root[data-theme='dark'] .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.16) !important;
+}
+
+:root[data-theme='dark'] .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.14) !important;
+}
+
+:root[data-theme='dark'] .bg-green-50 {
+  background-color: rgba(34, 197, 94, 0.16) !important;
+}
+
+:root[data-theme='dark'] .bg-green-100 {
+  background-color: rgba(34, 197, 94, 0.25) !important;
+}
+
+:root[data-theme='dark'] .bg-teal-50 {
+  background-color: rgba(20, 184, 166, 0.16) !important;
+}
+
+:root[data-theme='dark'] .bg-yellow-100 {
+  background-color: rgba(113, 63, 18, 0.75) !important;
+}
+
+:root[data-theme='dark'] .text-black,
+:root[data-theme='dark'] .text-gray-100,
+:root[data-theme='dark'] .text-gray-900,
+:root[data-theme='dark'] .text-gray-800 {
+  color: var(--ui-text-primary) !important;
+}
+
+:root[data-theme='dark'] .text-gray-700,
+:root[data-theme='dark'] .text-gray-600 {
+  color: var(--ui-text-secondary) !important;
+}
+
+:root[data-theme='dark'] .text-gray-500,
+:root[data-theme='dark'] .text-gray-400 {
+  color: var(--ui-text-muted) !important;
+}
+
+:root[data-theme='dark'] .text-gray-300 {
+  color: var(--ui-text-faint) !important;
+}
+
+:root[data-theme='dark'] .text-purple-900,
+:root[data-theme='dark'] .text-purple-800,
+:root[data-theme='dark'] .text-purple-700,
+:root[data-theme='dark'] .text-purple-600,
+:root[data-theme='dark'] .text-purple-400 {
+  color: #ddd6fe !important;
+}
+
+:root[data-theme='dark'] .text-red-600,
+:root[data-theme='dark'] .text-red-500,
+:root[data-theme='dark'] .text-red-400 {
+  color: #fca5a5 !important;
+}
+
+:root[data-theme='dark'] .text-amber-700,
+:root[data-theme='dark'] .text-amber-800 {
+  color: #fcd34d !important;
+}
+
+:root[data-theme='dark'] .text-blue-800 {
+  color: #93c5fd !important;
+}
+
+:root[data-theme='dark'] .text-green-600,
+:root[data-theme='dark'] .text-green-700,
+:root[data-theme='dark'] .text-green-800 {
+  color: #86efac !important;
+}
+
+:root[data-theme='dark'] .text-teal-800 {
+  color: #5eead4 !important;
+}
+
+:root[data-theme='dark'] .text-yellow-800 {
+  color: #fef08a !important;
+}
+
+:root[data-theme='dark'] .placeholder-gray-600,
+:root[data-theme='dark'] .placeholder-gray-400 {
+  color: var(--ui-text-muted) !important;
+}
+
+:root[data-theme='dark'] .placeholder-gray-300 {
+  color: var(--ui-text-faint) !important;
+}
+
+:root[data-theme='dark'] .border-gray-100,
+:root[data-theme='dark'] .border-gray-200,
+:root[data-theme='dark'] .border-dark-border {
+  border-color: var(--ui-border-subtle) !important;
+}
+
+:root[data-theme='dark'] .border-gray-300,
+:root[data-theme='dark'] .border-gray-900 {
+  border-color: var(--ui-border-strong) !important;
+}
+
+:root[data-theme='dark'] .border-gray-400 {
+  border-color: var(--ui-border-stronger) !important;
+}
+
+:root[data-theme='dark'] .border-purple-200,
+:root[data-theme='dark'] .border-purple-300,
+:root[data-theme='dark'] .border-l-purple-400,
+:root[data-theme='dark'] .border-t-purple-500 {
+  border-color: var(--ui-accent-border) !important;
+}
+
+:root[data-theme='dark'] .border-red-200,
+:root[data-theme='dark'] .border-red-500 {
+  border-color: rgba(252, 165, 165, 0.55) !important;
+}
+
+:root[data-theme='dark'] .focus\:border-purple-300:focus,
+:root[data-theme='dark'] .focus\:border-brand-purple:focus {
+  border-color: var(--ui-accent) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-gray-50:hover {
+  background-color: var(--ui-bg-muted) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-gray-100:hover {
+  background-color: var(--ui-bg-muted-strong) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-gray-200:hover {
+  background-color: var(--ui-bg-muted-stronger) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-gray-800:hover {
+  background-color: #475569 !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-purple-50:hover {
+  background-color: var(--ui-accent-soft-bg-strong) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-purple-100:hover {
+  background-color: rgba(139, 92, 246, 0.32) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-purple-700:hover {
+  background-color: var(--ui-accent-hover) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-red-50:hover {
+  background-color: rgba(239, 68, 68, 0.24) !important;
+}
+
+:root[data-theme='dark'] .hover\:bg-red-600:hover {
+  background-color: #b91c1c !important;
+}
+
+:root[data-theme='dark'] .hover\:text-gray-900:hover,
+:root[data-theme='dark'] .hover\:text-gray-700:hover,
+:root[data-theme='dark'] .hover\:text-gray-600:hover {
+  color: var(--ui-text-primary) !important;
+}
+
+:root[data-theme='dark'] .hover\:text-purple-700:hover {
+  color: #ddd6fe !important;
+}
+
+:root[data-theme='dark'] .hover\:text-red-600:hover {
+  color: #fca5a5 !important;
+}
+
+:root[data-theme='dark'] .shadow-sm {
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.45) !important;
 }

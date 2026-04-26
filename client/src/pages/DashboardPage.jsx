@@ -5,6 +5,7 @@ import { DocListSkeleton } from "../components/ui/Skeleton";
 import DocCard from "../components/docs/DocCard";
 import { useAuth } from "../hooks/useAuth";
 
+
 export default function DashboardPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const { docs, loading } = useDocs();

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 const AuthContext = createContext(null)
@@ -22,6 +22,34 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  const refreshProfile = useCallback(async () => {
+    if (!user) {
+      setProfile(null)
+      return { data: null, error: null }
+    }
+
+    const fallbackProfile = buildFallbackProfile(user)
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (error || !data) {
+        setProfile(fallbackProfile)
+        return { data: fallbackProfile, error }
+      }
+
+      setProfile(data)
+      return { data, error: null }
+    } catch (error) {
+      setProfile(fallbackProfile)
+      return { data: fallbackProfile, error }
+    }
+  }, [user])
 
   useEffect(() => {
     let isMounted = true
@@ -74,26 +102,13 @@ export function AuthProvider({ children }) {
         return
       }
 
-      const fallbackProfile = buildFallbackProfile(user)
+      const { data } = await refreshProfile()
+      if (!isMounted) return
 
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .maybeSingle()
-
-        if (!isMounted) return
-
-        if (error || !data) {
-          setProfile(fallbackProfile)
-          return
-        }
-
+      // if unmounted between async completion and state propagation,
+      // keep local state aligned with latest data.
+      if (data) {
         setProfile(data)
-      } catch {
-        if (!isMounted) return
-        setProfile(fallbackProfile)
       }
     }
 
@@ -102,7 +117,7 @@ export function AuthProvider({ children }) {
     return () => {
       isMounted = false
     }
-  }, [user])
+  }, [user, refreshProfile])
 
   async function signIn(email, password) {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -138,6 +153,7 @@ export function AuthProvider({ children }) {
     session,     // raw session object
     profile,     // your profiles table row (name, role, team_id)
     loading,     // true while checking session on first load
+    refreshProfile,
     signIn,
     signUp,
     signOut,

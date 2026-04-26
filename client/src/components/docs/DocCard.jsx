@@ -1,6 +1,14 @@
 // src/components/docs/DocCard.jsx
 import { useNavigate } from 'react-router-dom'
 import TagBadge from '../ui/TagBadge'
+import { useAuth } from '../../hooks/useAuth'
+
+function firstNonEmpty(...values) {
+  return values.find(value => {
+    if (typeof value === 'string') return value.trim().length > 0
+    return value !== null && value !== undefined
+  })
+}
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
@@ -19,7 +27,39 @@ function formatDate(dateStr) {
 
 export default function DocCard({ doc, isRecent }) {
   const navigate   = useNavigate()
-  const authorName = doc.profiles?.name || doc.author_name || 'You'
+  const { user } = useAuth()
+
+  const createdById = firstNonEmpty(
+    doc.created_by_id,
+    doc.created_by,
+    doc.author_id,
+    doc.owner_id
+  )
+
+  const updatedById = firstNonEmpty(
+    doc.updated_by_id,
+    doc.updated_by,
+    doc.last_edited_by,
+    doc.last_editor_id,
+    createdById
+  )
+
+  const createdByName = firstNonEmpty(
+    doc.created_by_name,
+    doc.creator_name,
+    doc.author_name,
+    doc.profiles?.name,
+    createdById === user?.id ? 'You' : null,
+    'Unknown member'
+  )
+
+  const updatedByName = firstNonEmpty(
+    doc.updated_by_name,
+    doc.edited_by_name,
+    doc.last_editor_name,
+    updatedById === user?.id ? 'You' : null,
+    createdByName
+  )
 
   return (
     <div
@@ -34,7 +74,10 @@ export default function DocCard({ doc, isRecent }) {
         {doc.title}
       </p>
       <p className="text-[11px] text-gray-400">
-        {formatDate(doc.updated_at)} · {authorName}
+        {formatDate(doc.updated_at)}
+      </p>
+      <p className="text-[11px] text-gray-500 mt-0.5 line-clamp-1">
+        Updated by {updatedByName} · Created by {createdByName}
       </p>
       <div className="flex gap-1 mt-2 flex-wrap">
         {(doc.tags || []).map(tag => (
