@@ -38,8 +38,14 @@ export default function Sidebar() {
   return (
     <aside className="w-50 bg-white border-r border-gray-200 flex flex-col shrink-0">
       <div className="px-4 py-4 border-b border-gray-200">
-        <p className="text-[14px] font-medium text-gray-900">DevDocs</p>
-        <p className="text-[11px] text-gray-400 mt-0.5">Engineering team</p>
+
+        <p className="flex justify-center text-[14px] font-medium text-gray-900 px-10">
+          DevDocs
+        </p>
+
+        <p className="text-[10px] text-gray-400 font-semibold mt-0.5">
+          Manage all your docs at one place
+        </p>
       </div>
 
       <nav className="mt-2">
