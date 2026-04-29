@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDocs } from "../hooks/useDocs";
 import { useAuth } from "../hooks/useAuth";
-import MarkdownEditor from "../components/docs/MarkdownEditor";
+import MarkdownEditor from "../components/docs/MarkDownEditor";
 import TagInput from "../components/ui/TagInput";
 import Modal from "../components/ui/Modal";
 import toast from "react-hot-toast";
