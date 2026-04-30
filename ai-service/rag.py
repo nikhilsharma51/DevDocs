@@ -10,9 +10,8 @@ load_dotenv()
 supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_KEY"))
 
 embeddings_model = GoogleGenerativeAIEmbeddings(
-    model="models/text-embedding-004",
+    model="models/embedding-001",
     google_api_key=os.getenv("GEMINI_API_KEY"),
-    output_dimensionality=768,
 )
 
 llm = ChatGoogleGenerativeAI(
