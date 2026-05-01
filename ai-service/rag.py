@@ -1,17 +1,24 @@
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from supabase import create_client
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
 # -----------------CLIENTS-----------------------------------
 supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_KEY"))
 
-embeddings_model = GoogleGenerativeAIEmbeddings(
-    model="models/embedding-001",
-    google_api_key=os.getenv("GEMINI_API_KEY"),
+# embeddings_model = GoogleGenerativeAIEmbeddings(
+#     model="models/embedding-001",
+#     google_api_key=os.getenv("GEMINI_API_KEY"),
+# )
+
+embeddings_model = HuggingFaceEndpointEmbeddings(
+     model="google/embeddinggemma-300m",
+     huggingfacehub_api_token= os.environ["HF_TOKEN"]
 )
 
 llm = ChatGoogleGenerativeAI(
@@ -23,7 +30,9 @@ llm = ChatGoogleGenerativeAI(
 
 # ---------embed-------------
 def get_embeddings(text: str):
-    return embeddings_model.embed_query(text)
+    embeddings = embeddings_model.embed_query(text)
+    # print(f"Embedding dimension: {len(embeddings)}")
+    return embeddings
 
 
 def embed_document(doc_id, title, content, user_id):
@@ -37,25 +46,26 @@ def embed_document(doc_id, title, content, user_id):
         .eq("author_id", user_id)
         .execute()
     )
-
+    
     return result
 
 
 # ----------rag query--------------------------
 def run_rag_query(question, user_id):
     question_embedding = get_embeddings(question)
-
+    # print(question_embedding)
     result = supabase.rpc(
         "match_documents",
         {
             "query_embedding": question_embedding,
-            "match_threshold": 0.3,
+            "match_threshold": 0.1,
             "match_count": 3,
             "user_id": user_id,
         },
     ).execute()
 
     matched_docs = result.data
+    # print(result)
 
     if not matched_docs:
         return {
